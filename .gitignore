@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.env
+data/raw/*
+data/processed/*
+app/ml/artifacts/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!app/ml/artifacts/.gitkeep
+venv/
+.ipynb_checkpoints/
