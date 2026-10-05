@@ -4,11 +4,11 @@ from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error
 
-from features import clean_biomarker_data, build_features
+from app.config import settings
+from app.ml.features import clean_biomarker_data, build_features
 
 def train():
-    # Update this path once your teammate's cleaned CSV is in data/processed/
-    df = pd.read_csv("data/processed/biomarker_data.csv")
+    df = pd.read_csv(settings.DATA_PATH)
     df = clean_biomarker_data(df)
 
     X = build_features(df)
@@ -23,7 +23,7 @@ def train():
     mae = mean_absolute_error(y_test, preds)
     print(f"MAE: {mae:.2f} years")
 
-    with open("app/ml/artifacts/bioage_model.pkl", "wb") as f:
+    with open(settings.MODEL_PATH, "wb") as f:
         pickle.dump(model, f)
 
 if __name__ == "__main__":
