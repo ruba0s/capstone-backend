@@ -1,0 +1,33 @@
+app/main.py
+  h_e8f9fc0e2c6ba9 2-3,7-11,13,15-16
+app/llm/prompts.py
+  h_e8f9fc0e2c6ba9 1-33
+app/ml/train.py
+  h_e8f9fc0e2c6ba9 7-8,11,26
+app/config.py
+  h_e8f9fc0e2c6ba9 9-10
+app/ml/model.py
+  h_e8f9fc0e2c6ba9 7-10,15
+requirements.txt
+  h_e8f9fc0e2c6ba9 7
+app/llm/client.py
+  h_e8f9fc0e2c6ba9 1-25
+app/llm/schemas.py
+  h_e8f9fc0e2c6ba9 1-23
+app/api/routes/explain.py
+  h_e8f9fc0e2c6ba9 1-14
+.env.example
+  h_e8f9fc0e2c6ba9 3-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "autter_version": "1.6.9",
+  "base_commit_sha": "d4e883069b2ea7729b0c04694abae8ba61e2072d",
+  "branch": "main",
+  "prompts": {},
+  "humans": {
+    "h_e8f9fc0e2c6ba9": {
+      "author": "alishbaj <103146018+alishbaj@users.noreply.github.com>"
+    }
+  }
+}
