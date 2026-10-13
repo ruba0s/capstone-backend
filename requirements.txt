@@ -5,3 +5,4 @@ scikit-learn
 python-dotenv
 pydantic
 anthropic
+shap

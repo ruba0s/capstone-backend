@@ -9,3 +9,13 @@ def clean_biomarker_data(df: pd.DataFrame) -> pd.DataFrame:
 
 def build_features(df: pd.DataFrame) -> pd.DataFrame:
     return df[FEATURE_COLS]
+
+FRIENDLY_NAMES = {
+    "RIAGENDR": "sex",
+    "PAQ605": "physical activity",
+    "BMXBMI": "BMI",
+    "LBXGLU": "fasting glucose",
+    "DIQ010": "diabetes status",
+    "LBXGLT": "2-hour glucose",
+    "LBXIN": "insulin",
+}

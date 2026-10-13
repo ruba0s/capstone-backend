@@ -1,4 +1,6 @@
+from typing import List
 from pydantic import BaseModel
+from app.llm.schemas import FactorContribution
 
 class BiomarkerInput(BaseModel):
     age: int
@@ -14,3 +16,4 @@ class PredictionResponse(BaseModel):
     chronological_age: int
     predicted_biological_age: float
     gap: float
+    factors: List[FactorContribution]
