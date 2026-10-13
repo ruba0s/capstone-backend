@@ -1,0 +1,25 @@
+app/api/routes/predict.py
+  h_e8f9fc0e2c6ba9 2,4,10-18,20,22,24-26
+clean_biomarker.py
+  h_e8f9fc0e2c6ba9 1-23
+app/schemas/biomarker.py
+  h_e8f9fc0e2c6ba9 5-11
+app/ml/train.py
+  h_e8f9fc0e2c6ba9 15,26-30
+app/config.py
+  h_e8f9fc0e2c6ba9 2,5-7,11-12
+app/ml/features.py
+  h_e8f9fc0e2c6ba9 3-4,6-7,11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "autter_version": "1.6.9",
+  "base_commit_sha": "23a77ff41a29bb9bd6f808f569fb268acb650819",
+  "branch": "biomarker-model",
+  "prompts": {},
+  "humans": {
+    "h_e8f9fc0e2c6ba9": {
+      "author": "alishbaj <103146018+alishbaj@users.noreply.github.com>"
+    }
+  }
+}
