@@ -40,6 +40,7 @@ UNITS = {
     "avg_daily_activity": "MIMS units per valid minute",
     "activity_variability": "MIMS units (std of daily activity)",
     "avg_active_minutes": "minutes per day",
+    "sleep_hours": "hours per night, usual weekday (12 = 12 or more)",
 }
 
 
