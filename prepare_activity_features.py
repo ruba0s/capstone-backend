@@ -27,7 +27,7 @@ features = features[features["RIDAGEYR"] >= 18].copy()
 features = features.rename(columns={"RIDAGEYR": "age"})
 
 # Remove incomplete model records
-features = features.dropna(subset=FEATURE_COLUMNS + ["age"])
+features = features.dropna(subset=["avg_daily_activity", "activity_variability", "age"])
 
 # Save features
 features.to_csv(
