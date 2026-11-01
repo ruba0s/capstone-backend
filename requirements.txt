@@ -6,3 +6,4 @@ python-dotenv
 pydantic
 anthropic
 shap
+matplotlib

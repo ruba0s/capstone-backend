@@ -9,6 +9,8 @@ def weighted_average(preds: dict, weights: dict) -> float:
     the remaining weights are rescaled to sum to 1."""
     available = {k: v for k, v in preds.items() if v is not None and k in weights}
     total = sum(weights[k] for k in available)
+    if total == 0:  # only models with weight 0 are available (e.g. sleep only): plain average
+        return sum(available.values()) / len(available)
     return sum(weights[k] * v for k, v in available.items()) / total
 
 
