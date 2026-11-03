@@ -17,7 +17,10 @@ MODALITIES = {
     # activity_final.csv calls the age column "age" instead of RIDAGEYR
     "activity": {"data": PROCESSED / "activity_final.csv", "features": ACTIVITY_FEATURES, "target": "age"},
     # None = use every column except SEQN and the age column
-    "sleep": {"data": PROCESSED / "sleep_data.csv", "features": None},
+    # Old single self-reported-hours sleep model, switched off: multi-night sleep beat it on the
+    # same people (14.56 vs 15.16 years) and keeping both shrinks the ensemble's overlap.
+    # "sleep": {"data": PROCESSED / "sleep_data.csv", "features": None},
+    "sleep_multinight": {"data": PROCESSED / "sleep_multinight.csv", "features": None},
 }
 
 MIN_AGE = 18  # activity and sleep are adults only, so biomarker is filtered to match
