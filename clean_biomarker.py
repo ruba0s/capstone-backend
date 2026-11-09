@@ -1,4 +1,7 @@
 import pandas as pd
+from app.ml.registry import MODALITIES
+
+OUT_PATH = MODALITIES["biomarker"]["data"]
 
 df = pd.read_csv("data/raw/biomarker.csv")
 
@@ -19,5 +22,6 @@ df[feature_cols] = df[feature_cols].fillna(df[feature_cols].median())
 print("Rows after:", len(df))
 print("Age range:", df["RIDAGEYR"].min(), "to", df["RIDAGEYR"].max())
 
-df.to_csv("data/processed/biomarker_data.csv", index=False)
-print("Saved to data/processed/biomarker_data.csv")
+OUT_PATH.parent.mkdir(parents=True, exist_ok=True)   # creates data/processed/ if it doesn't exist
+df.to_csv(OUT_PATH, index=False)
+print(f"Saved to {OUT_PATH}")

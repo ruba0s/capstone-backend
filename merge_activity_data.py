@@ -1,4 +1,7 @@
 import pandas as pd
+from app.ml.registry import MODALITIES
+
+OUT_PATH = MODALITIES["activity"]["data"]   # data/processed/activity.csv, set in registry.py
 
 # Load existing features (includes participant age)
 activity = pd.read_csv("data/processed/activity_features.csv")
@@ -37,10 +40,8 @@ merged = merged[
 ]
 
 # Save final model-ready data
-merged.to_csv(
-    "data/processed/activity_final.csv",
-    index=False
-)
+OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+merged.to_csv(OUT_PATH, index=False)
 
 print("Participants in final dataset:", len(merged))
 print("\nMissing values:")
@@ -49,4 +50,4 @@ print(merged.isnull().sum())
 print("\nFirst 5 rows:")
 print(merged.head())
 
-print("\nSaved activity_final.csv!")
+print(f"\nSaved {OUT_PATH}")

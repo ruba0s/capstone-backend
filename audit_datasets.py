@@ -9,6 +9,7 @@ Run from the repo root:  python audit_datasets.py
 """
 from itertools import combinations
 from pathlib import Path
+from app.ml.registry import MODALITIES
 
 import pandas as pd
 
@@ -20,12 +21,7 @@ ID_COL = "SEQN"
 AGE_CANDIDATES = ["RIDAGEYR", "age"]
 NON_FEATURES = {ID_COL, "RIDAGEYR", "age", "age_group"}
 
-# Edit the file names here if a teammate saves a dataset under a different name.
-DATASETS = {
-    "biomarker": PROCESSED / "biomarker_data.csv",
-    "activity": PROCESSED / "activity_final.csv",
-    "sleep": PROCESSED / "sleep_data.csv",
-}
+DATASETS = {name: cfg["data"] for name, cfg in MODALITIES.items()}
 
 # Units from the NHANES 2013-2014 documentation plus our own feature definitions.
 # Add new feature columns here so they do not show up as "unknown".

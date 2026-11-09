@@ -19,8 +19,8 @@ Inputs (put in data/raw/):
     PAXDAY_H.xpt   daily accelerometer summaries (same file as clean_activity.py)
     DEMO_H.xpt     demographics (chronological age)
 
-Output:
-    data/processed/sleep_multinight.csv  (+ sleep_multinight_features.md)
+Output (path set in app/ml/registry.py):
+    data/processed/sleep.csv  (+ sleep_features.md)
 
 Run from the repo root:
     python prepare_sleep_multinight.py
@@ -30,9 +30,11 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from app.ml.registry import MODALITIES
+
 RAW_DIR = Path("data/raw")
-OUT_PATH = Path("data/processed/sleep_multinight.csv")
-FEATURES_PATH = Path("data/processed/sleep_multinight_features.md")
+OUT_PATH = MODALITIES["sleep"]["data"]
+FEATURES_PATH = OUT_PATH.with_name(OUT_PATH.stem + "_features.md")
 
 # Same day rule as clean_activity.py: days 1 and 9 are partial, so use days 2-8.
 FIRST_DAY, LAST_DAY = 2, 8
