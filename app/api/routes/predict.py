@@ -1,41 +1,30 @@
-from fastapi import APIRouter
-import pandas as pd
-from app.schemas.biomarker import BiomarkerInput, PredictionResponse
-from app.ml.features import FEATURE_COLS, FRIENDLY_NAMES
-from app.ml.model import bioage_model
+from fastapi import APIRouter, HTTPException
+
 from app.llm.schemas import FactorContribution
+from app.ml.predictor import predict_biological_age
+from app.schemas.prediction import PredictionResponse, PredictRequest
 
 router = APIRouter()
 
+
 @router.post("/predict", response_model=PredictionResponse)
-def predict(data: BiomarkerInput):
-    row = {
-        "RIAGENDR": data.sex,
-        "PAQ605": data.activity,
-        "BMXBMI": data.bmi,
-        "LBXGLU": data.fasting_glucose,
-        "DIQ010": data.diabetes,
-        "LBXGLT": data.glucose_2hr,
-        "LBXIN": data.insulin,
-    }
-    features = pd.DataFrame([row])[FEATURE_COLS]  # keeps the column order the model was trained on
-
-    predicted = bioage_model.predict(features)
-    contribs = bioage_model.contributions(features)
-
-    factors = [
-        FactorContribution(
-            name=FRIENDLY_NAMES[col],
-            value=float(features[col].iloc[0]),
-            impact_years=round(v, 1),
-        )
-        for col, v in contribs.items()
-        if col != "RIAGENDR"  # sex isn't something a person can change
-    ]
+def predict(req: PredictRequest):
+    try:
+        result = predict_biological_age(req.age, req.model_inputs())
+    except FileNotFoundError as e:  # models or ensemble.json haven't been trained yet
+        raise HTTPException(status_code=503, detail=str(e))
 
     return PredictionResponse(
-        chronological_age=data.age,
-        predicted_biological_age=round(predicted, 1),
-        gap=round(predicted - data.age, 1),
-        factors=factors,
+        chronological_age=req.age,
+        predicted_biological_age=round(result["predicted_biological_age"], 1),
+        gap=round(result["gap"], 1),
+        factors=[
+            FactorContribution(name=f["name"], value=round(f["value"], 2),
+                               impact_years=round(f["impact_years"], 2) + 0.0,  # + 0.0 turns -0.0 into 0.0
+                               source=f["source"])
+            for f in result["factors"]
+        ],
+        other_years=round(result["other_years"], 2),
+        model_predictions={k: round(v, 1) for k, v in result["model_predictions"].items()},
+        weights_used={k: round(v, 3) for k, v in result["weights_used"].items()},
     )

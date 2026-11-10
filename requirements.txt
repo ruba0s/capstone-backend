@@ -7,3 +7,5 @@ pydantic
 anthropic
 shap
 matplotlib
+pytest
+httpx

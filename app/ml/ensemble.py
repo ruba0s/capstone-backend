@@ -3,15 +3,22 @@ Ensembles the per-modality models into one biological age, then corrects age bia
 of the data (for instance missing sleep data), the weights of the remaining models are rescaled to sum to 1).
 """
 
+def effective_weights(preds: dict, weights: dict) -> dict:
+    """The weight each available model actually gets for this person (they sum to 1).
+    Missing models are skipped and the rest are rescaled; if every available model has
+    weight 0 (e.g. sleep only), they share the weight equally."""
+    available = [k for k, v in preds.items() if v is not None and k in weights]
+    total = sum(weights[k] for k in available)
+    if total == 0:
+        return {k: 1 / len(available) for k in available}
+    return {k: weights[k] / total for k in available}
+
+
 def weighted_average(preds: dict, weights: dict) -> float:
     """Weighted average of whichever models are available for this person.
-    preds: {"biomarker": 47.2, "activity": 51.0}; missing models are skipped and
-    the remaining weights are rescaled to sum to 1."""
-    available = {k: v for k, v in preds.items() if v is not None and k in weights}
-    total = sum(weights[k] for k in available)
-    if total == 0:  # only models with weight 0 are available (e.g. sleep only): plain average
-        return sum(available.values()) / len(available)
-    return sum(weights[k] * v for k, v in available.items()) / total
+    preds: {"biomarker": 47.2, "activity": 51.0}"""
+    w = effective_weights(preds, weights)
+    return sum(w[k] * preds[k] for k in w)
 
 
 def correct_age_bias(pred: float, age: float, bias: dict) -> float:
