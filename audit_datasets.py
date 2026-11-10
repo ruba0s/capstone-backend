@@ -9,7 +9,7 @@ Run from the repo root:  python audit_datasets.py
 """
 from itertools import combinations
 from pathlib import Path
-from app.ml.registry import MODALITIES
+from app.ml.registry import MIN_AGE, MODALITIES
 
 import pandas as pd
 
@@ -36,6 +36,10 @@ UNITS = {
     "avg_daily_activity": "MIMS units per valid minute",
     "activity_variability": "MIMS units (std of daily activity)",
     "avg_active_minutes": "minutes per day",
+    "mean_sleep_min": "minutes of sleep per day (average over valid days)",
+    "min_sleep_min": "minutes of sleep on the shortest valid day",
+    "max_sleep_min": "minutes of sleep on the longest valid day",
+    "std_sleep_min": "minutes (std of daily sleep across valid days)",
 }
 
 
@@ -76,6 +80,7 @@ def audit_one(name, path):
         info["age_median"] = float(age.median())
         info["under18"] = float((age < 18).mean())
         info["over65"] = float((age >= 65).mean())
+        info["trained_on"] = int((age >= MIN_AGE).sum())
 
     # Missing values and features
     missing = df.isna().sum()
@@ -95,16 +100,20 @@ def build_report(infos):
     lines.append("")
 
     # Summary table
-    lines.append("| Dataset | Has age | Participants | Age range | Missing cells | Features |")
-    lines.append("|---|---|---|---|---|---|")
+    lines.append("| Dataset | Has age | Participants | Age range | Used for training (%d+) | Missing cells | Features |" % MIN_AGE)
+    lines.append("|---|---|---|---|---|---|---|")
     for d in infos:
         if not d["found"]:
-            lines.append("| %s | file not found | - | - | - | - |" % d["name"])
+            lines.append("| %s | file not found | - | - | - | - | - |" % d["name"])
             continue
         has_age = "yes (%s)" % d["age_col"] if d["has_age"] else "NO"
         rng = age_text(d) if d["has_age"] else "-"
-        lines.append("| %s | %s | %d | %s | %d | %d |" % (
-            d["name"], has_age, d["participants"], rng, d["missing_cells"], len(d["features"])))
+        trained = "%d" % d["trained_on"] if d["has_age"] else "-"
+        lines.append("| %s | %s | %d | %s | %s | %d | %d |" % (
+            d["name"], has_age, d["participants"], rng, trained, d["missing_cells"], len(d["features"])))
+
+    lines.append("")
+    lines.append("Training keeps only ages %d and over (`MIN_AGE` in `app/ml/registry.py`)." % MIN_AGE)
     lines.append("")
 
     # Details per dataset
